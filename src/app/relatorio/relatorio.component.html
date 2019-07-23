@@ -1,0 +1,157 @@
+<div class="container">
+  <h1 id="title">RELATÓRIO</h1>
+
+  <div id="central">
+    <!--<input type="button" class="btn btn-outline-primary" value="Atualizar Página" onclick="atualizar()">-->
+    <br /><br /><br />
+    <div class="form-row">
+      <input type="button" class="btn btn-primary" value="Gerar Relatório Clientes" (click)="gerarPDF()">
+      <!-- para ocultar id="receita1-->
+    </div>
+    <br/>
+    <div class="form-row">
+      <input type="button" class="btn btn-primary" value="Gerar Relatório Cervejas" (click)="gerarPDFCerva()">
+    </div><br />
+    <div class="form-row">
+      <input type="button" class="btn btn-primary" value="Gerar Relatório Vinhos" (click)="gerarPDFVinho()">
+    </div>
+
+    <div id="1" class="escondida">
+      <div id="content" #content>
+        <h1> LISTAGEM DE CLIENTES CADASTRADOS </h1> 
+        <tbody>
+          <tr *ngFor="let item of pessoasFiltradas">
+            <ul>
+              <h3>
+                <td>{{item.nome | uppercase}}</td>
+              </h3>
+              <li><b>ID:</b> {{item.id}} </li>
+              <li><b>CPF:</b> {{item.cpf | mask:["000.000.000-00"]}} </li>
+              <li><b> TELEFONE:</b> {{item.telFixo | mask:["(00) 0000-0000"]}} </li>
+              <li><b> CELULAR:</b> {{item.celular | mask:["(00) 00000-0000"]}} </li>
+              <li><b>DATA DE NASC.: </b> {{item.dataNasc | DateFormatPipe}}</li>
+              <li><b>EMAIL: </b> {{item.email}}</li>
+              <li><b>FACEBOOK: </b> {{item.fb}}</li>
+              <li><b>INSTAGRAM: </b> {{item.insta}}</li>
+              <td>
+               
+              </td>
+              <li><b>CEP: </b> {{item.cep | mask:["00.000-000"]}}</li>
+              <li><b>UF: </b> {{item.uf}}</li>
+              <li><b>CIDADE: </b> {{item.cidade}}</li>
+              <li><b>BAIRRO: </b> {{item.bairro}}</li>
+              <li><b>RUA: </b> {{item.rua}}</li>
+              <li><b>COMPLEMENTO: </b> {{item.complemento}}</li>
+            </ul>
+              _________________________________________________________________________________________
+          </tr>
+        </tbody>
+        <tfoot *ngIf="!pessoasFiltradas.length">
+          <tr>
+            <td>
+              <h4>Nenhum pessoa encontrado</h4>
+            </td>
+          </tr>
+        </tfoot>
+
+      </div>
+      <br />
+      <br />
+      <button class="btn btn-outline-primary" (click)="gerarPDF()"> Relatório Clientes</button>
+
+    </div>
+
+
+    <div id="2" class="escondida">
+
+
+      <div id="content1" #content1>
+        <h1> LISTAGEM DE CERVEJAS CADASTRADAS </h1>
+
+        <tbody>
+          <tr *ngFor="let item of cervejasFiltradas">
+
+
+            <ul>
+              <h3>
+                <td>{{item.nome | uppercase}}</td>
+              </h3>
+              <li><b>ID:</b> {{item.id}} </li>
+              <li><b>MARCA:</b> {{item.marca | uppercase}} </li>
+              <li><b>FAMÍLIA:</b>{{item.familia | uppercase}} </li>
+              <li><b>ESTILO:</b> {{item.estilo | uppercase}} </li>
+              <li><b>COR:</b> {{item.cor | uppercase}} </li>
+              <li><b>ABV:</b> {{item.abv }} % </li>
+              <li><b>IBU:</b> {{item.ibu }} </li>
+              <li><b>NACIONALIDADE:</b> {{item.nacionalidade | uppercase}}</li>
+              <li><b>Valor:</b> {{item.valor | currency:'BRL':true:'1.2-2'}}</li>
+
+            </ul>
+
+
+            _________________________________________________________________________________________
+
+
+          </tr>
+        </tbody>
+        <tfoot *ngIf="!cervejasFiltradas.length">
+          <tr>
+            <td>
+              <h4>Nenhuma cerveja encontrado</h4>
+            </td>
+          </tr>
+        </tfoot>
+
+      </div>
+      <br />
+      <br />
+      <button class="btn btn-outline-primary" (click)="gerarPDFCerva()"> Relatório Cervejas</button>
+
+    </div>
+    <div id="3" class="escondida">
+
+
+      <div id="content2" #content2>
+        <h1> LISTAGEM DE VINHOS CADASTRADOS </h1>
+
+        <tbody>
+          <tr *ngFor="let item of vinhosFiltrados">
+
+
+            <ul>
+              <h3>
+                <td>{{item.nome | uppercase}}</td>
+              </h3>
+              <li><b>ID:</b> {{item.id}} </li>
+              <li><b>TIPO:</b> {{item.tipo | uppercase}} </li>
+              <li><b>UVA:</b>{{item.uva | uppercase}} </li>
+              <li><b>SAFRA:</b> {{item.safra | mask:["0000"]}} </li>
+              <li><b>NACIONALIDADE:</b> {{item.pais | uppercase}}</li>
+              <li><b>Valor:</b> {{item.preco | currency:'BRL':true:'1.2-2'}}</li>
+
+            </ul>
+
+
+            _________________________________________________________________________________________
+
+
+          </tr>
+        </tbody>
+        <tfoot *ngIf="!vinhosFiltrados.length">
+          <tr>
+            <td>
+              <h4>Nenhum vinho encontrado</h4>
+            </td>
+          </tr>
+        </tfoot>
+
+      </div>
+      <br />
+      <br />
+      <button class="btn btn-outline-primary" (click)="gerarPDFVinho()"> Relatório Vinhos</button>
+
+    </div>
+
+    <br /><br /><br /><br /><br />
+  </div>
+</div>

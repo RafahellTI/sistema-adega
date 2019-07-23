@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<body>
+  <div class="container" id="fundo">
+    <h1 id="title"> CADASTRO DE CLIENTES</h1>
+    <div class="d-flex">
+      <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+      <div class="form-inline mr-auto">
+        <div class="form-group mb-2">Filtro:
+          <input type="text" class="form-control-mr-22" placeholder="Buscar Nome" [(ngModel)]="filtroLista">
+        </div>
+      </div>
+      <div>
+        <button class="btn btn-outline-primary" (click)="NovaPessoa(template)">
+          <i class="fa fa-plus-circle"></i>&nbsp;
+          Novo </button>
+      </div>
+    </div>
+    <h3>Filtro: {{filtroLista}}</h3>
+    <table border="3" class="table table-striped">
+      <thead class="thead-light">
+        <tr>
+          <th>
+            <button class="btn btn-dark btn-sm" (click)="ocultarId()">Exibir</button></th>
+          <th>#</th>
+          <th>NOME</th>
+          <th>CPF</th>
+          <th>TELEFONE</th>
+          <th>DATA NASC.</th>
+          <th>GERENCIAR</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of pessoasFiltradas">
+              <td>
+                <img *ngIf="mostrarId" width=35 src="https://cdn.onlinewebfonts.com/svg/img_448427.png" alt="">
+              </td>
+              <td>{{item.id}}</td>
+              <td>{{item.nome | uppercase}}</td>
+              <td>{{item.cpf | mask:["000.000.000-00"]}}</td>
+              <td>{{item.telFixo | mask:["(00) 0000-0000"]}}</td>
+              <td>{{item.dataNasc | DateFormatPipe}}</td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-success"> <i class="fa fa-edit" tooltip="Editar"
+                      (click)="EditarPessoa(item, template)"></i></button>
+                  <button class="btn btn-sm btn-danger"><i class="fa fa-eraser" tooltip="Excluir"
+                      (click)="doDelete(item)"></i></button>
+                </div>
+              </td>
+            </tr>
+      </tbody>
+      <tfoot *ngIf="!pessoasFiltradas.length">
+        <tr>
+          <td>
+            <h4>Nenhuma pessoa encontrada</h4>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    <div bsModal #template="bs-modal" class="modal fade" tabindex="-1" aria-labelledby="dialog-sizes-name1"
+      [config]="{backdrop: 'static', keyboard: 'false'}">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 id="dialog-sizes-name1" class="modal-title pull-left">Incluir/Gerenciar Cadastro</h4>
+            <button type="button" class="close pull-right" (click)="template.hide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="registerForm">
+              <b>INFORMÇÃOES PESSOAIS:</b>
+              <div class="form-row">
+                <div class="form-group col-md-8">
+                  <label>Nome</label>
+                  <input type="text" class="form-control"
+                    [ngClass]="{'is-invalid': registerForm.get('nome').errors &&  registerForm.get('nome').touched}"
+                    formControlName="nome" placeholder=" Nome completo">
+                  <div *ngIf="registerForm.get('nome').hasError('required') &&  registerForm.get('nome').touched"
+                    class="invalid-feedback">* campo obrigatório</div>
+                  <div *ngIf="registerForm.get('nome').hasError('minlength') &&  registerForm.get('nome').touched"
+                    class="invalid-feedback">Deve ter no mínimo 4 caracteres</div>
+                  <div *ngIf="registerForm.get('nome').hasError('maxlength') &&  registerForm.get('nome').touched"
+                    class="invalid-feedback">Deve ter no máximo 50 caracteres</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label>CPF</label>
+                  <input mask="00000000000" type="text" id="cpf" class="form-control"
+                    [ngClass]="{'is-invalid': registerForm.get('cpf').errors &&  registerForm.get('cpf').touched}"
+                    formControlName="cpf" onblur="return verificarCPF(this.value)" placeholder="Informe um n° válido ">
+                  <div *ngIf="registerForm.get('cpf').hasError('required') &&  registerForm.get('cpf').touched"
+                    class="invalid-feedback"> * campo obrigatório</div>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label>Data de Nascimento</label>
+                  <input type="text" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat : 'DD/MM/YYYY ' }"
+                    [ngClass]="{'is-invalid': registerForm.get('dataNasc').errors &&  registerForm.get('dataNasc').touched}"
+                    formControlName="dataNasc" placeholder="ex: 23/03/1993">
+                  <div
+                    *ngIf="registerForm.get('dataNasc').hasError('required') &&  registerForm.get('dataNasc').touched"
+                    class="invalid-feedback">* campo obrigatório</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label>Telefone</label>
+                  <input mask="(00) 0000-0000" type="text" class="form-control"
+                    [ngClass]="{'is-invalid': registerForm.get('telFixo').errors &&  registerForm.get('telFixo').touched}"
+                    formControlName="telFixo" placeholder="Fixo ">
+                  <div *ngIf="registerForm.get('telFixo').hasError('minlength') &&  registerForm.get('telFixo').touched"
+                    class="invalid-feedback">Deve conter 10 digitos</div>
+                  <div *ngIf="registerForm.get('telFixo').hasError('maxlength') &&  registerForm.get('telFixo').touched"
+                    class="invalid-feedback">Deve conter no máximo 11 digitos</div>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Celular</label>
+                  <input mask="(00) 00000-0000" type="text" class="form-control"
+                    [ngClass]="{'is-invalid': registerForm.get('celular').errors &&  registerForm.get('celular').touched}"
+                    formControlName="celular" placeholder="Móvel">
+                  <div *ngIf="registerForm.get('celular').hasError('minlength') &&  registerForm.get('celular').touched"
+                    class="invalid-feedback">Deve conter no máximo 11 digitos</div>
+                  <div *ngIf="registerForm.get('celular').hasError('maxlength') &&  registerForm.get('celular').touched"
+                    class="invalid-feedback">Deve conter no máximo 11 digitos</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-8">
+                  <form [formGroup]="registerForm" name="f1">
+                    <label>Email </label>
+                    <input type="text" class="form-control col-md-12" formControlName="email"
+                      placeholder="ex: name@gmail.com" name="email" onblur="validacaoEmail(f1.email)">
+                    <div id="msgemail"></div>
+                  </form>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label> <img src="https://png.pngtree.com/element_our/sm/20180313/sm_5aa7b9f63e400.png" width="30"
+                      height="30"></label>
+                  <input type="text" class="form-control" formControlName="fb"
+                    placeholder="cole o link do seu perfil aqui">
+                </div>
+                <div class="form-group col-md-4">
+                  <label> <img src="https://imagepng.org/wp-content/uploads/2017/08/instagram-icone-icon-1.png"
+                      width="30" height="30"></label>
+                  <input type="text" class="form-control" formControlName="insta"
+                    placeholder="cole o link do seu perfil aqui">
+                </div>
+              </div>
+              <br />
+              <b>ENDEREÇO:</b>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label>Cep:
+                    <input name="cep" type="text" class="form-control" formControlName="cep" id="cep" value=""
+                      maxlength="10" mask="00.000-000" placeholder="00.000-000"/></label><br /> <!-- onblur="pesquisacep(this.value);" -->
+                    </div>
+                    <div class="form-group col-md-4">
+                     UF: <br/>
+                  <select class="form-control " formControlName="uf">
+                      <option *ngFor="let item of estadosFiltrados" value="{{item.uf}}">{{item.uf | uppercase}} </option>
+                    </select>
+                  </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label>Cidade:
+                    <input name="cidade" type="text" class="form-control" formControlName="cidade"
+                   placeholder="cidade ou região " id="cidade" /></label><br />
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Bairro:
+                    <input name="bairro" type="text" class="form-control" formControlName="bairro" 
+                      id="bairro" placeholder="informe o bairro"/></label><br />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label>Rua:
+                    <input name="rua" type="text" class="form-control" formControlName="rua" placeholder="N° da rua/avenida" id="rua" /></label><br />
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Complemento:
+                    <textarea rows="4" cols="50" type="text" class="form-control" placeholder="informações adicionais" formControlName="complemento">
+                      </textarea>
+                    </label><br />
+                </div>
+              </div>
+              <!--
+               <form method="get" action=".">
+                  <label>Cep:
+                  <input name="cep"  type="text"  id="cep" value="" size="10" maxlength="9"
+                         onblur="pesquisacep(this.value);" /></label><br/>
+                  <label>Rua:
+                  <input name="rua" type="text"  id="rua" size="60" /></label><br/>
+                  <label>Bairro:
+                  <input name="bairro" type="text"  id="bairro" size="40" /></label><br/>
+                  <label>Cidade:
+                  <input name="cidade" type="text"  id="cidade" size="40" /></label><br/>
+                  <label>Estado:
+                  <input name="uf" type="text" id="uf"  size="2" /></label><br/>
+                  <label>IBGE:
+                  <input name="ibge" type="text" id="ibge" size="8" /></label><br/>
+                </form>
+                -->
+                Não sabe o seu CEP ? <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/">Clique aqui</a><br />
+                <br /><input class="btn btn-dark btn-sm" type="reset" value="Limpar Campos" />
+              <br />
+            </form>
+          </div>
+          <div class="modal-footer d-flx">
+            <button class="btn btn-secondary" (click)="template.hide()">
+              Fechar
+            </button>
+            <button class="btn btn-primary" (click)="salvarAlteracao(template)">
+              Salvar Alterações
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

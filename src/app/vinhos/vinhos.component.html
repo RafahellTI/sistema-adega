@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<body> 
+<div class="container">
+  <h1 id="title"> CADASTRO DE VINHOS</h1>
+<div class="d-flex">
+    <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+  <div class="form-inline mr-auto">
+    <div class="form-group mb-2">Filtro:
+      <input type="text" class="form-control-mr-22" placeholder="Buscar Nome"
+        [(ngModel)]="filtroLista">
+    </div>
+  </div>
+  <div>      
+    <button class="btn btn-outline-primary" (click)="NovoVinho(template)">
+      <i class="fa fa-plus-circle"></i>&nbsp;
+      Novo </button>
+  </div>
+</div>
+<h3>Filtro: {{filtroLista}}</h3>
+<table border="3" class="table table-striped">
+  <thead class="thead-light"> 
+    <tr >
+      <th>
+        <button class="btn btn-dark btn-sm" (click)="ocultarId()">Exibir</button></th>
+        <th>#</th>
+      <th>NOME</th>
+      <th>TIPO</th>
+      <th with="20px">UVA</th>
+      <th>SAFRA</th>
+      <th width="30px">NACIONALIDADE</th>
+      <th>VALOR</th>
+      <TH>GERENCIAR</TH>
+    </tr>
+  </thead>
+  <tbody >
+    <tr *ngFor="let item of vinhosFiltrados">
+      <td width="20px" >        
+        <img *ngIf="mostrarId" width=35 src="https://image.flaticon.com/icons/png/512/45/45637.png" alt="">
+      </td>
+      <td>{{item.id }}</td>
+      <td>{{item.nome | uppercase}}</td>
+      <td>{{item.tipo | uppercase}}</td>
+      <td>{{item.uva | uppercase}}</td> 
+      <td>{{item.safra | mask:["0000"] }}</td>
+      <td>{{item.pais | uppercase }}</td>
+       <td>{{item.preco | currency:'BRL':true:'1.2-2'}}</td>
+
+      <td>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-success"> <i class="fa fa-edit" tooltip="Editar"
+            (click)="EditarVinho(item, template)"></i></button>
+          <button class="btn btn-sm btn-danger"><i class="fa fa-eraser" tooltip="Excluir"
+            (click)="doDelete(item)"></i></button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot *ngIf="!vinhosFiltrados.length">
+    <tr>
+      <td>
+        <h4>Nenhum vinho encontrado</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<div bsModal #template="bs-modal" class="modal fade" tabindex="-1"
+      aria-labelledby="dialog-sizes-name1" [config]="{backdrop: 'static', keyboard: 'false'}" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Incluir/Gerenciar Cadastro</h4>
+        <button type="button" class="close pull-right" (click)="template.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form [formGroup]="registerForm">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label>Nome</label>
+                  <input type="text" class="form-control" 
+                  [ngClass]="{'is-invalid': registerForm.get('nome').errors &&  registerForm.get('nome').touched}"
+                  formControlName="nome" placeholder="marca e/ou versão">
+                  <div *ngIf="registerForm.get('nome').hasError('required') &&  registerForm.get('nome').touched" 
+                  class="invalid-feedback">* campo obrigatório</div>
+            <div *ngIf="registerForm.get('nome').hasError('minlength') &&  registerForm.get('nome').touched" 
+                  class="invalid-feedback">Deve ter no mínimo 1 caractere</div>
+            <div *ngIf="registerForm.get('nome').hasError('maxlength') &&  registerForm.get('nome').touched" 
+                  class="invalid-feedback">Deve ter no máximo 50 caracteres</div>
+                </div>
+              </div>  
+              <div class="form-row">
+                <div class="form-group col md-4">
+                  <label> Tipo</label>
+                    <select class="form-control col md-4" formControlName="tipo">
+                      <option value="Tinto">Tinto</option>
+                      <option value="Branco">Branco</option>
+                      <option value="Rosé">Rosé</option>
+                      <option value="Espumante">Espumante</option>
+                      <option value="Doce">Doce</option>S
+                    </select>
+                  </div>
+                  <div class="form-group col md-6">
+                      <label> Uva</label>
+                      <select class="form-control col md-4" formControlName="uva">
+                          <option value="Cabernet Sauvignon">Cabernet Sauvignon</option>
+                          <option value="Merlot">Merlot</option>
+                          <option value="Malbec">Malbec</option>
+                          <option value="Carménère">Carménère</option>
+                          <option value="Pinot Noir">Pinot Noir</option>
+                          <option value="Syrah">Syrah</option>
+                          <option value="Tannat">Tannat</option>
+                          <option value="Tempranillo">Tempranillo</option>
+                          <option value="Chardonnay">Chardonnay</option>
+                          <option value="Sauvignon Blanc">Sauvignon Blanc</option> 
+                        </select>
+                      </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col md-6">
+                        <label> Safra</label>
+                          <input type="month" class="form-control" formControlName="safra">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Nacionalidade</label>
+                            <select class="form-control " formControlName="pais">
+                                <option *ngFor="let item of paisesFiltrados" value="{{item.nome}}">{{item.nome | uppercase}} </option>
+                              </select>
+                          </div>
+                            </div>
+            
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <label>Valor</label>
+               <input class="form-control" currencyMask formControlName="preco"  [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"/>
+                  
+                  </div>
+                </div>
+  
+              <input class="btn btn-dark btn-sm" type="reset" value="Limpar Campos" />
+            </form>
+      </div>
+      <div class="modal-footer d-flx">
+          <button class="btn btn-secondary" (click)="template.hide()">
+              Fechar
+            </button>
+            <button class="btn btn-primary" (click)="salvarAlteracao(template)">
+              Salvar Alterações
+            </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html>

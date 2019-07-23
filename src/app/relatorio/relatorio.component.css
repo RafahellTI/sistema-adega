@@ -1,0 +1,19 @@
+h1#title{
+    font-family:'Courier New', Courier, monospace;
+    text-align: center;
+    font-stretch: extra-condensed;
+    color:#1C1C1C;      
+    font-style: oblique;  
+    font-weight: bolder;
+    text-decoration-line: underline;
+    font-size:40px;
+    
+}
+.escondida {
+    display:none;
+}
+
+#format{
+    box-align: center;
+
+}

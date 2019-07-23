@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!--CSS DO GIF DE LOADING -->
+    <style>
+        .load {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 30%;
+            left: 45%;
+            color: white;
+
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <title>Sistema Cadastro</title>
+    <base href="/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body bgcolor="#1C1C1C">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <!--VALIDAÇÕES JAVASCRIPT - TENTAR PASSAR PARA ARQUIVOS .JS SEPARADOS DEPOIS -->
+    <!--VALIDAR CPF-->
+    <script>
+        function verificarCPF(cpf) {
+            var i;
+            s = cpf;
+            var cpf = s.substr(0, 9);
+            var dv = s.substr(9, 2);
+            var d1 = 0;
+            var v = false;
+
+            for (i = 0; i < 9; i++) {
+                d1 += cpf.charAt(i) * (10 - i);
+            }
+            if (cpf == 0) {
+                alert("Campo CPF VAZIO! Deve ser preenchido com um número válido!");
+                v = true;
+                return false;
+            }
+            if (d1 == 0) {
+                alert("CPF Inválido");
+                resetCPF();
+                v = true;
+                return false;
+
+
+            }
+            d1 = 11 - (d1 % 11);
+            if (d1 > 9) d1 = 0;
+            if (dv.charAt(0) != d1) {
+                alert("CPF Inválido");
+                resetCPF();
+                v = true;
+                return false;
+
+            }
+
+            d1 *= 2;
+            for (i = 0; i < 9; i++) {
+                d1 += cpf.charAt(i) * (11 - i);
+            }
+            d1 = 11 - (d1 % 11);
+            if (d1 > 9) d1 = 0;
+            if (dv.charAt(1) != d1) {
+                alert("CPF Inválido!");
+                resetCPF();
+                v = true;
+                return false;
+
+            }
+            if (!v) {
+                alert("CPF Válidado com sucesso !");
+
+            }
+        }
+    </script>
+    <!--VALIDAR CPF-->
+    <!--Validar numero inteiro -->
+    <script language="javascript">
+        function resetCPF() {
+            with (document) {
+                getElementById("cpf").value = "";
+
+            }
+        }﻿
+    </script>
+    <script>
+        var $range = document.querySelector('input'),
+            $value = document.querySelector('span');
+
+        $range.addEventListener('input', function () {
+            $value.textContent = this.value;
+        });
+    </script>
+
+    <script>
+        function validacaoEmail(field) {
+            usuario = field.value.substring(0, field.value.indexOf("@"));
+            dominio = field.value.substring(field.value.indexOf("@") + 1, field.value.length);
+            if ((usuario.length >= 1) &&
+                (dominio.length >= 3) &&
+                (usuario.search("@") == -1) &&
+                (dominio.search("@") == -1) &&
+                (usuario.search(" ") == -1) &&
+                (dominio.search(" ") == -1) &&
+                (dominio.search(".") != -1) &&
+                (dominio.indexOf(".") >= 1) &&
+                (dominio.lastIndexOf(".") < dominio.length - 1)) {
+                document.getElementById("msgemail").innerHTML = "<font color='green'>E-mail válido";
+                alert("email valido");
+            }
+            else {
+                document.getElementById("msgemail").innerHTML = "<font color='red'>Email inválido </font>";
+                alert("E-mail invalido");
+            }
+        }
+    </script>
+    <!--
+    <script type="text/javascript">
+        function abrir() {
+            var main = document.getElementById("central");
+            var iten = main.getElementsByTagName("input");
+            if (iten) {
+                for (var i = 0; i < iten.length; i++) {
+                    iten[i].onclick = function () {
+                        var el = document.getElementById(this.id.substr(7, 7));
+                        if (el.style.display == "block")
+                            el.style.display = "none";
+                        else
+                            el.style.display = "block";
+                    }
+                }
+            }
+        }
+        window.onload = abrir;
+    </script>-->
+
+    <script type="text/javascript">
+        function atualizar() {
+            window.location.reload()
+        }
+    </script>
+    <!--
+    <script type="text/javascript">
+
+        function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value = ("");
+            document.getElementById('bairro').value = ("");
+            document.getElementById('cidade').value = ("");
+            document.getElementById('uf').value = ("");
+            document.getElementById('ibge').value = ("");
+        }
+
+        function meu_callback(conteudo) {
+            if (!("erro" in conteudo)) {
+                //Atualiza os campos com os valores.
+                document.getElementById('rua').value = (conteudo.logradouro);
+                document.getElementById('bairro').value = (conteudo.bairro);
+                document.getElementById('cidade').value = (conteudo.localidade);
+                document.getElementById('uf').value = (conteudo.uf);
+                document.getElementById('ibge').value = (conteudo.ibge);
+            } //end if.
+            else {
+                //CEP não Encontrado.
+                limpa_formulário_cep();
+                alert("CEP não encontrado.");
+            }
+        }
+
+        function pesquisacep(valor) {
+
+            //Nova variável "cep" somente com dígitos.
+            var cep = valor.replace(/\D/g, '');
+
+            //Verifica se campo cep possui valor informado.
+            if (cep != "") {
+
+                //Expressão regular para validar o CEP.
+                var validacep = /^[0-9]{8}$/;
+
+                //Valida o formato do CEP.
+                if (validacep.test(cep)) {
+
+                    //Preenche os campos com "..." enquanto consulta webservice.
+                    document.getElementById('rua').value = "...";
+                    document.getElementById('bairro').value = "...";
+                    document.getElementById('cidade').value = "...";
+                    document.getElementById('uf').value = "...";
+                    document.getElementById('ibge').value = "...";
+
+                    //Cria um elemento javascript.
+                    var script = document.createElement('script');
+
+                    //Sincroniza com o callback.
+                    script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
+
+                    //Insere script no documento e carrega o conteúdo.
+                    document.body.appendChild(script);
+
+                } //end if.
+                else {
+                    //cep é inválido.
+                    limpa_formulário_cep();
+                    alert("Formato de CEP inválido.");
+                }
+            } //end if.
+            else {
+                //cep sem valor, limpa formulário.
+                limpa_formulário_cep();
+            }
+        };
+
+    </script>-->
+
+    <!--script-- src="node_modules\@neos21\bootstrap3-glyphicons"></!--script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <app-root>
+        <div class="load"> <i class="fa fa-cog fa-spin fa-5x fa-fw"></i><span class="sr-only">Loading...</span> </div>
+    </app-root>
+</body>
+</html>

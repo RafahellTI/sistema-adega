@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<body>
+  <div class="container">
+     
+    <h1 id="title"> CADASTRO DE CERVEJAS</h1>
+    <div class="d-flex">
+      <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+      <div class="form-inline mr-auto">
+        <div class="form-group mb-2">Filtro:
+          <input type="text" class="form-control-mr-22" placeholder="Buscar Nome" [(ngModel)]="filtroLista">
+        </div>
+      </div>
+      <div>
+        <button class="btn btn-outline-primary" (click)="NovaCerveja(template)">
+          <i class="fa fa-plus-circle"></i>&nbsp;
+          Novo </button>
+        &nbsp;&nbsp;
+    <!--   <button class="btn btn-primary" [routerLink]="['/estilos']">
+          Estilos </button>-->
+      </div>
+    </div>
+    <h3>Filtro: {{filtroLista}}</h3>
+    <table border="3" class="table table-striped">
+      <thead class="thead-light">
+        <tr>
+          <th>
+            <button class="btn btn-dark btn-sm" (click)="ocultarId()">Exibir</button></th>
+          <th>#</th>
+          <th>NOME</th>
+          <th>MARCA</th>
+          <th>FAMÍLIA</th>
+          <th>ESTILO</th>
+          <th>COLORAÇÃO</th>
+          <th>ABV</th>
+          <th>IBU</th>
+          <th> PAÍS</th>
+          <th>PREÇO</th>
+          <TH>GERENCIAR</TH>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of cervejasFiltradas">
+          <td>
+            <img *ngIf="mostrarId" width=35
+              src="data:image/png;base64,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"
+              alt="">
+          </td>
+          <td>{{item.id}}</td>
+          <td>{{item.nome | uppercase}}</td>
+          <td>{{item.marca | uppercase}}</td>
+          <td>{{item.familia | uppercase}}</td>
+          <td>{{item.estilo}} </td>
+          <td>{{item.cor | uppercase }}</td>
+          <td>{{item.abv}}%</td>
+          <td>{{item.ibu}}</td>
+          <td> {{item.nacionalidade | uppercase}}</td>
+          <td>{{item.valor | currency:'BRL':true:'1.2-2'}}</td>
+          <td>
+            <div class="btn-group">
+              <button class="btn btn-sm btn-success"> <i class="fa fa-edit" tooltip="Editar"
+                  (click)="EditarCerveja(item, template)"></i></button>
+              <button class="btn btn-sm btn-danger"><i class="fa fa-eraser" tooltip="Excluir"
+                  (click)="doDelete(item)"></i></button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot *ngIf="!cervejasFiltradas.length">
+        <tr>
+          <td>
+            <h4>Nenhuma cerveja encontrada</h4>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div bsModal #template="bs-modal" class="modal fade" tabindex="-1" aria-labelledby="dialog-sizes-name1"
+      [config]="{backdrop: 'static', keyboard: 'false'}">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 id="dialog-sizes-name1" class="modal-title pull-left">Incluir/Gerenciar Cadastro</h4>
+            <button type="button" class="close pull-right" (click)="template.hide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="registerForm">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label>Nome</label>
+                  <input type="text" class="form-control"
+                    [ngClass]="{'is-invalid': registerForm.get('nome').errors &&  registerForm.get('nome').touched}"
+                    formControlName="nome" placeholder=" Nome da versão">
+                  <div *ngIf="registerForm.get('nome').hasError('required') &&  registerForm.get('nome').touched"
+                    class="invalid-feedback">* campo obrigatório</div>
+                  <div *ngIf="registerForm.get('nome').hasError('minlength') &&  registerForm.get('nome').touched"
+                    class="invalid-feedback">Deve ter no mínimo 1 caractere</div>
+                  <div *ngIf="registerForm.get('nome').hasError('maxlength') &&  registerForm.get('nome').touched"
+                    class="invalid-feedback">Deve ter no máximo 50 caracteres</div>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Marca</label>
+                  <input type="text" class="form-control"
+                    [ngClass]="{'is-invalid': registerForm.get('marca').errors &&  registerForm.get('marca').touched}"
+                    formControlName="marca" placeholder=" nome comercial ou do fabricante">
+                  <div *ngIf="registerForm.get('marca').hasError('required') &&  registerForm.get('marca').touched"
+                    class="invalid-feedback">* campo obrigatório</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-md-8">
+                  <label>Família</label> <br />
+                  <div class="container1">
+                    <label class="container1">Larger
+                      <input type="radio" formControlName="familia" checked="checked" formControlName="familia"
+                        value="larger">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="container1">Ale
+                      <input type="radio" formControlName="familia" value="Ale">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="container1">Lambic
+                      <input type="radio" formControlName="familia" value="lambic">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="container1">Outra
+                      <input type="radio" formControlName="familia" value="outra">
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label>Estilo</label>
+                      <select class="form-control"  formControlName="estilo">
+                        <option value="Pilsen">Pilsen</option>
+                        <option value="Amber Larger">Amber Larger</option>
+                        <option value="International Amber Larger">International Amber Lager</option>
+                        <option value="American Lager">American Lager</option>
+                        <option value="American Light Lager">American Light Lager</option>
+                        <option value="Standard American Lager">Standard American Lager</option>
+                        <option value="Premium American Lager">Premium American Lager</option>
+                        <option value="Barley Wine">Barley Wine</option>
+                        <option value="American Barley Wine">American Barley Wine</option>
+                        <option value="Bière Brut">Bière Brut</option>
+                        <option value="Bitter">Bitter</option>
+                        <option value="Extra Special Bitter (ESB)">Extra Special Bitter (ESB)</option>
+                        <option value="Blonde Ale">Blonde Ale</option>
+                        <option value="Belgian Blonde Ale">Belgian Blonde Ale</option>
+                        <option value="Bock">Bock</option>
+                        <option value="German Bock">German Bock</option>
+                        <option value="German Doppelbock">German Doppelbock</option>
+                        <option value="Brett Beer">Brett Beer</option>
+                        <option value="Brown Ale">Brown Ale</option>
+                        <option value="American Brown Ale">American Brown Ale</option>
+                        <option value="Cerveja de Trigo">Cerveja de Trigo</option>
+                        <option value="Berliner Weisse">Berliner Weisse</option>
+                        <option value="German Heffeweizen">German Heffeweizen</option>
+                        <option value="German Weizenbock">German Weizenbock</option>
+                        <option value="German Dunkelweizen">German Dunkelweizen</option>
+                        <option value="German Kristallweizen">German Kristallweizen</option>
+                        <option value="Honey Wheat Ale">Honey Wheat Ale</option>
+                        <option value="Witbier">Witbier</option>
+                        <option value="American Wheat Beer">American Wheat Beer</option>
+                        <option value="Wheat Lager">Wheat Lager</option>
+                        <option value="Cream Ale">Cream Ale</option>
+                        <option value="Dark Lager">Dark Lager</option>
+                        <option value="Dark American Lager">Dark American Lager</option>
+                        <option value="Dortmunder Export">Dortmunder Export</option>
+                        <option value="Dubbel">Dubbel</option>
+                        <option value="Belgian Dubbel">Belgian Dubbel</option>
+                        <option value="Farmhouse Ale">Farmhouse Ale</option>
+                        <option value="Saison">Saison</option>
+                        <option value="Fruit Beer">Fruit Beer</option>
+                        <option value="India Pale Ale (IPA)">India Pale Ale (IPA)</option>
+                        <option value="English India Pale Ale">English India Pale Ale</option>
+                        <option value="American India Pale Ale">American India Pale Ale</option>
+                        <option value="Imperial India Pale Ale">Imperial India Pale Ale</option>
+                        <option value="Black IPA<">Black IPA</option>
+                        <option value="New England IPA">New England IPA</option>
+                        <option value="Red IPA">Red IPA</option>
+                        <option value="Australian India Pale">Australian India Pale </option>
+                        <option value="Ale">Ale</option>
+                        <option value="Rye IPA">Rye IPA</option>
+                        <option value="India Pale Lager (IPL)">India Pale Lager (IPL)</option>
+                        <option value="Keller">Keller</option>
+                        <option value="Kölsch">Kölsch</option>
+                        <option value="Lambic">Lambic</option>
+                        <option value="Belgian Gueuze Lambic">Belgian Gueuze Lambic</option>
+                        <option value="Belgian Fruit Lambic">Belgian Fruit Lambic</option>
+                        <option value="Märzen">Märzen</option>
+                        <option value="Munich Dunkel">Munich Dunkel</option>
+                        <option value="Munich Helles">Munich Helles</option>
+                        <option value="Oktoberfest">Oktoberfest</option>
+                        <option value="Pale Ale">Pale Ale</option>
+                        <option value="English Pale Ale">English Pale Ale</option>
+                        <option value="Belgian Pale Ale">Belgian Pale Ale</option>
+                        <option value="American Pale Ale (APA)">American Pale Ale (APA)</option>
+                        <option value="French India Pale Ale">French India Pale Ale</option>
+                        <option value="Pilsen">Pilsen</option>
+                        <option value="Bohemian Pilsner">Bohemian Pilsner</option>
+                        <option value="Porter">Porter</option>
+                        <option value="Brown Porter">Brown Porter</option>
+                        <option value="Robust Porter">Robust Porter</option>
+                        <option value="American Imperial Porter">American Imperial Porter</option>
+                        <option value="Baltic Porter">Baltic Porter</option>
+                        <option value="American Porter">American Porter</option>
+                        <option value="Pumpkin Ale">Pumpkin Ale</option>
+                        <option value="Pumpkin Spice Beer">Pumpkin Spice Beer</option>
+                        <option value="RauchbierMärzen Rauchbier">RauchbierMärzen Rauchbier</option>
+                        <option value="Red AleIrish">Red AleIrish </option>
+                        <option value="Red Ale">Red Ale</option>
+                        <option value="American Amber Ale">American Amber Ale</option>
+                        <option value="Schwarzbier">Schwarzbier</option>
+                        <option value="Smoked Beer">Smoked Beer</option>
+                        <option value="Sour">Sour</option>
+                        <option value="American Sour Ale">American Sour Ale</option>
+                        <option value="Sweet Stout">Stout</option>
+                        <option value="">Sweet Stout</option>
+                        <option value="Oatmeal Stout">Oatmeal Stout</option>
+                        <option value="Classic Irish Dry Stout">Classic Irish Dry Stout</option>
+                        <option value="Export Stout">Export Stout</option>
+                        <option value="Russian Imperial Stout">Russian Imperial Stout</option>
+                        <option value="American Stout">American Stout</option>
+                        <option value="American Imperial Stout">American Imperial Stout</option>
+                        <option value="Strong Ale">Strong Ale</option>
+                        <option value="Belgian Golden Strong Ale">Belgian Golden Strong Ale</option>
+                        <option value="Belgian Dark Strong Ale">Belgian Dark Strong Ale</option>
+                        <option value="American Strong Pale Ale">American Strong Pale Ale</option>
+                        <option value="Tripel">Tripel</option>
+                        <option value="Belgian Tripel">Belgian Tripel</option>
+                        <option value="Vienna Lager">Vienna Lager</option>
+                        <option value=" Outro">Outro</option>
+                      </select>
+                    </div> 
+                    
+          <!--   <div class="form-row">
+              <div class="form-group col-md-4">
+                  <label>Estilo</label>
+                  <select class="form-control" formControlName="estiloId">
+                    <option *ngFor="let item of estilosFiltrados" value="{{item.id}}">{{item.nome | uppercase}} </option>
+                  </select>
+                </div>
+                <div class="form-group col-md-2">
+                  <label>.</label>
+                  <button class="btn btn-primary" id="clica" value="2">
+                    <i class="fa fa-plus-circle"></i>
+                    Add.
+                  </button>
+                </div>-->
+                <div class="form-group col-md-4">
+                  <label>Coloração</label>
+                  <select class="form-control col-md-8" formControlName="cor">
+                    <option value="palha">Palha</option>
+                    <option value="Amarelo">Amarelo</option>
+                    <option value="Dourado">Dourado</option>
+                    <option value="Âmbar">Âmbar</option>
+                    <option value="cobre claro">Cobre Claro</option>
+                    <option value="marrom claro">Marrom Claro</option>
+                    <option value="marrom">Marrom</option>
+                    <option value="marrom escuro">Marrom Escuro</option>
+                    <option value="marrom muito escuro">Marrom Muito Escuro</option>
+                    <option value="preto">Preto</option>
+                    <option value="preto opaco">Preto Opaco</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label>ABV - Alcohol by volume(%)</label>
+             
+                  <input type="number" class="form-control col-md-4" formControlName="abv" step="0.1">
+                </div>
+                <label>IBU</label><br />
+                <div class="form-row">
+                  <input type="range" formControlName="ibu" value="0" min="0" max="100" oninput="display.value=value"
+                    onchange="display.value=value">
+                  <div class="form-group">
+                    &nbsp;&nbsp; <input type="text" formControlName="ibu" class="form-control col-md-4" id="display"
+                      value="0" readonly>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label>Nacionalidade</label>
+                  <select class="form-control " formControlName="nacionalidade">
+                      <option *ngFor="let item of paisesFiltrados" value="{{item.nome}}">{{item.nome | uppercase}} </option>
+                    </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label>Valor</label>
+              <input class="form-control" currencyMask  formControlName="valor"  [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"/> 
+                </div>
+              </div>
+              <input class="btn btn-dark btn-sm" type="reset" value="Limpar Campos" />
+            </form>
+          </div>
+          <div class="modal-footer d-flx">
+            <button class="btn btn-secondary" (click)="template.hide()">
+              Fechar
+            </button>
+            <button class="btn btn-primary" (click)="salvarAlteracao(template)">
+              Salvar Alterações
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
